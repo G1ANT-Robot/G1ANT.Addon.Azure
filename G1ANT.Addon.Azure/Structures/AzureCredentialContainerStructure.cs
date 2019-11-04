@@ -33,6 +33,12 @@ namespace G1ANT.Addon.Azure.Structures
 
         public override void Set(Structure value, string index = null)
         {
+            if (value is AzureCredentialContainerStructure azureCredentialContainer && index == null)
+            {
+                clientId = azureCredentialContainer.clientId;
+                clientSecret = azureCredentialContainer.clientSecret;
+                keyVaultUri = azureCredentialContainer.keyVaultUri;
+            }
             throw new InvalidOperationException("It is not possible to set values in Azure Credential Container");
         }
     }
