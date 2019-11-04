@@ -13,7 +13,7 @@ namespace G1ANT.Addon.Azure.Commands
             public TextStructure Secret { get; set; }
 
             [Argument(Required = true, Tooltip = "Azure Key Vault client ID")]
-            public TextStructure Id { get; set; }
+            public TextStructure ClientId { get; set; }
 
             [Argument(Required = true, Tooltip = "Azure Key Vault Url")]
             public TextStructure Url { get; set; }
@@ -28,7 +28,7 @@ namespace G1ANT.Addon.Azure.Commands
 
         public void Execute(Arguments arguments)
         {
-            Scripter.Variables.SetVariableValue(arguments.Result.Value, new AzureCredentialContainerStructure(arguments.Secret.Value, arguments.Id.Value, new Uri(arguments.Url.Value)));
+            Scripter.Variables.SetVariableValue(arguments.Result.Value, new AzureCredentialContainerStructure(arguments.Secret.Value, arguments.ClientId.Value, new Uri(arguments.Url.Value)));
         }       
     }
 }
