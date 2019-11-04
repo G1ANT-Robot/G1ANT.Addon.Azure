@@ -19,7 +19,7 @@ namespace G1ANT.Addon.Azure.Commands
             public TextStructure Url { get; set; }
 
             [Argument(Required = true, Tooltip = "Name of the key vault variable")]
-            public TextStructure Name { get; set; } = new TextStructure("result");
+            public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
 
         public KeyVaultCommand(AbstractScripter scripter) : base(scripter)
@@ -28,7 +28,7 @@ namespace G1ANT.Addon.Azure.Commands
 
         public void Execute(Arguments arguments)
         {
-            Scripter.Variables.SetVariableValue(arguments.Name.Value, new AzureCredentialContainerStructure(arguments.Secret.Value, arguments.Id.Value, new Uri(arguments.Url.Value)));
+            Scripter.Variables.SetVariableValue(arguments.Result.Value, new AzureCredentialContainerStructure(arguments.Secret.Value, arguments.Id.Value, new Uri(arguments.Url.Value)));
         }       
     }
 }
