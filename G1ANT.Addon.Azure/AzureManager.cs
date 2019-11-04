@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace G1ANT.Addon.Azure
 {
-    public sealed class AzureManager
+    public class AzureHelper
     {
-        public static AzureManager Instance { get; } = new AzureManager();
         private static string _clientId;
         private static string _clientSecret;
 
