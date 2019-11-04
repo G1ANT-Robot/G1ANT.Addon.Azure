@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using G1ANT.Language;
-
-// Please remember to refresh G1ANT.Language.dll in references
+﻿using G1ANT.Language;
 
 namespace G1ANT.Addon.Azure
 {
     [Addon(Name = "Azure", Tooltip = "This Addon allows to use Azure services")]
     [Copyright(Author = "G1ANT Ltd", Copyright = "G1ANT Ltd", Email = "support@g1ant.com", Website = "www.g1ant.com")]
     [License(Type = "LGPL", ResourceName = "License.txt")]
-    //[CommandGroup(Name = "", Tooltip = "")]
+    [CommandGroup(Name = "azure", Tooltip = "Azure commands")]
     public class Addon : Language.Addon
     {
 
