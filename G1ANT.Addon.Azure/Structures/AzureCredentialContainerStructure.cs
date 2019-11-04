@@ -14,6 +14,11 @@ namespace G1ANT.Addon.Azure.Structures
 
         public AzureCredentialContainerStructure(string clientSecret, string clientId, Uri keyVaultUri, string format = ""): base(null, format, null)
         {
+            if (string.IsNullOrEmpty(clientSecret) || string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(keyVaultUri.ToString()))
+            {
+                throw new ArgumentException("Client Secret, Client ID and key vault uri can't be empty.");
+            }
+
             this.clientSecret = clientSecret;
             this.clientId = clientId;
             this.keyVaultUri = keyVaultUri;
