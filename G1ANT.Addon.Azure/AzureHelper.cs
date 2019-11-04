@@ -1,7 +1,8 @@
-﻿using Microsoft.Azure.KeyVault;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Azure.KeyVault;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using static Microsoft.Azure.KeyVault.KeyVaultClient;
 
 namespace G1ANT.Addon.Azure
 {
@@ -28,7 +29,7 @@ namespace G1ANT.Addon.Azure
         {
             _clientId = clientId;
             _clientSecret = clientSecret;
-            var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(GetToken));
+            var keyVaultClient = new KeyVaultClient(new AuthenticationCallback(GetToken));
             var secret = Task.Run(() => keyVaultClient.GetSecretAsync(keyVaultUri + @"secrets/" + secretName)).ConfigureAwait(false).GetAwaiter().GetResult();
             return secret.Value;
         }
