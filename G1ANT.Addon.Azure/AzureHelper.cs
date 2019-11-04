@@ -24,14 +24,15 @@ namespace G1ANT.Addon.Azure
             return result.AccessToken;
         }
 
-        public async static string GetSecret(string clientId, string clientSecret, Uri keyVaultUri, string secretName)
+        public static async Task<string> GetSecret(string clientId, string clientSecret, Uri keyVaultUri, string secretName)
         {
             _clientId = clientId;
             _clientSecret = clientSecret;
-            var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(GetToken));
-            var secret = await keyVaultClient.GetSecretAsync(keyVaultUri + @"secrets/" + secretName).ConfigureAwait(false);
-            keyVaultClient.Dispose();
-            return secret.Value;
+            using (var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(GetToken)))
+            {
+                var secret = await keyVaultClient.GetSecretAsync(keyVaultUri + "secrets/" + secretName);
+                return secret.Value;
+            }
         }
 
     }

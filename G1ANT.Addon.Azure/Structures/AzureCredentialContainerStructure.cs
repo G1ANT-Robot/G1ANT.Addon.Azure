@@ -28,7 +28,7 @@ namespace G1ANT.Addon.Azure.Structures
         {
             if (string.IsNullOrEmpty(index))
                 throw new ArgumentException("Key name can't be empty");
-            return new PasswordStructure(AzureHelper.GetSecret(clientId, clientSecret, keyVaultUri, index));
+            return new PasswordStructure(AzureHelper.GetSecret(clientId, clientSecret, keyVaultUri, index).Result);
         }
 
         public override void Set(Structure value, string index = null)
