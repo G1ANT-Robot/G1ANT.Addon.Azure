@@ -28,12 +28,11 @@ namespace G1ANT.Addon.Azure
         {
             _clientId = clientId;
             _clientSecret = clientSecret;
-            using (var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(GetToken)))
+            using (var keyVaultClient = new KeyVaultClient(GetToken))
             {
                 var secret = await keyVaultClient.GetSecretAsync(keyVaultUri + "secrets/" + secretName).ConfigureAwait(false);
                 return secret.Value;
             }
         }
-
     }
 }

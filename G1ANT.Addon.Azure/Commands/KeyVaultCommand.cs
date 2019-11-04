@@ -29,6 +29,7 @@ namespace G1ANT.Addon.Azure.Commands
         public void Execute(Arguments arguments)
         {
             Scripter.Variables.SetVariableValue(arguments.Result.Value, new AzureCredentialContainerStructure(arguments.Secret.Value, arguments.ClientId.Value, new Uri(arguments.Url.Value)));
-        }       
+
+        }
     }
 }
