@@ -8,11 +8,12 @@ namespace G1ANT.Addon.Azure.Structures
     {
         private string clientSecret;
         private string clientId;
+        private int azureTimeout;
         private Uri keyVaultUri;
 
         public AzureCredentialContainerStructure(object value, string format = null, AbstractScripter scripter = null) : base(value, format, scripter) { }
 
-        public AzureCredentialContainerStructure(string clientSecret, string clientId, Uri keyVaultUri, string format = ""): base(null, format, null)
+        public AzureCredentialContainerStructure(string clientSecret, string clientId, Uri keyVaultUri, int azureTimeout, string format = ""): base(null, format, null)
         {
             if (string.IsNullOrEmpty(clientSecret) || string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(keyVaultUri.ToString()))
             {
@@ -21,14 +22,19 @@ namespace G1ANT.Addon.Azure.Structures
 
             this.clientSecret = clientSecret;
             this.clientId = clientId;
+            this.azureTimeout = azureTimeout;
             this.keyVaultUri = keyVaultUri;
         }
 
         public override Structure Get(string index = null)
         {
+            var azureManager = new AzureManager();
             if (string.IsNullOrEmpty(index))
+            {
                 throw new ArgumentException("Key name can't be empty");
-            return new PasswordStructure(AzureHelper.GetSecret(clientId, clientSecret, keyVaultUri, index).Result);
+            }
+
+            return new PasswordStructure(azureManager.GetSecret(clientId, clientSecret, keyVaultUri, index, azureTimeout).Result);
         }
 
         public override void Set(Structure value, string index = null)

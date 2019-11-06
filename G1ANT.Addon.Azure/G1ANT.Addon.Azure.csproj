@@ -119,6 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Addon.cs" />
+    <Compile Include="Extensions\TaskExtensions.cs" />
     <Compile Include="Structures\AzureCredentialContainerStructure.cs" />
     <EmbedResource Include="License.txt" />
     <None Include="app.config" />
@@ -129,7 +130,7 @@
     </EmbeddedResource>
     -->
     <None Include="packages.config" />
-    <Compile Include="AzureHelper.cs" />
+    <Compile Include="AzureManager.cs" />
     <Compile Include="Commands\KeyVaultCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

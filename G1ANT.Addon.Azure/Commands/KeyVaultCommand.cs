@@ -18,6 +18,9 @@ namespace G1ANT.Addon.Azure.Commands
             [Argument(Required = true, Tooltip = "Azure Key Vault Url")]
             public TextStructure Url { get; set; }
 
+            [Argument(Required = true, Tooltip = "Connection timeout to Azure in ms")]
+            public IntegerStructure AzureTimeout { get; set; } = new IntegerStructure(5000);
+
             [Argument(Required = true, Tooltip = "Name of the key vault variable")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
@@ -28,8 +31,11 @@ namespace G1ANT.Addon.Azure.Commands
 
         public void Execute(Arguments arguments)
         {
-            Scripter.Variables.SetVariableValue(arguments.Result.Value, new AzureCredentialContainerStructure(arguments.Secret.Value, arguments.ClientId.Value, new Uri(arguments.Url.Value)));
-
+            var azureManager = new AzureManager();
+            if (azureManager.AreCredentialsCorrectAsync(arguments.ClientId.Value, arguments.Secret.Value, new Uri(arguments.Url.Value), arguments.AzureTimeout.Value).Result)
+            {
+                Scripter.Variables.SetVariableValue(arguments.Result.Value, new AzureCredentialContainerStructure(arguments.Secret.Value, arguments.ClientId.Value, new Uri(arguments.Url.Value), arguments.AzureTimeout.Value));
+            }
         }
     }
 }
