@@ -30,8 +30,7 @@ namespace G1ANT.Addon.Azure.Extensions
 
             task.ContinueWith((antecedent, state) =>
             {
-                var tuple =
-                    (Tuple<Timer, TaskCompletionSource<VoidTypeStruct>>)state;
+                var tuple = (Tuple<Timer, TaskCompletionSource<VoidTypeStruct>>)state;
                 tuple.Item1.Dispose();
                 MarshalTaskResults(antecedent, tuple.Item2);
             },
@@ -55,9 +54,8 @@ namespace G1ANT.Addon.Azure.Extensions
                     proxy.TrySetCanceled();
                     break;
                 case TaskStatus.RanToCompletion:
-                    Task<TResult> castedSource = source as Task<TResult>;
-                    proxy.TrySetResult(
-                        castedSource == null ? default(TResult) : castedSource.Result);
+                    var castedSource = source as Task<TResult>;
+                    proxy.TrySetResult(castedSource == null ? default : castedSource.Result);
                     break;
             }
         }
