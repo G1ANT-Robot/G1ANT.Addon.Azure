@@ -55,7 +55,7 @@ namespace G1ANT.Addon.Azure.Extensions
                     break;
                 case TaskStatus.RanToCompletion:
                     var castedSource = source as Task<TResult>;
-                    proxy.TrySetResult(castedSource == null ? default : castedSource.Result);
+                    proxy.TrySetResult(castedSource == null ? default(TResult) : castedSource.Result);
                     break;
             }
         }
