@@ -38,7 +38,7 @@ namespace G1ANT.Addon.Azure
             }
         }
 
-        public async Task<bool> AreCredentialsCorrectAsync(string clientId, string clientSecret, Uri keyVaultUri, int azureTimeout)
+        public async Task<bool> AreCredentialsCorrect(string clientId, string clientSecret, Uri keyVaultUri, int azureTimeout)
         {
             try
             {

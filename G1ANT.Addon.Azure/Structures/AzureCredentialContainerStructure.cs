@@ -45,7 +45,10 @@ namespace G1ANT.Addon.Azure.Structures
                 clientSecret = azureCredentialContainer.clientSecret;
                 keyVaultUri = azureCredentialContainer.keyVaultUri;
             }
-            throw new InvalidOperationException("It is not possible to set values in Azure Credential Container");
+            else
+            {
+                throw new InvalidOperationException("It is not possible to set values in Azure Credential Container");
+            }
         }
     }
 }
