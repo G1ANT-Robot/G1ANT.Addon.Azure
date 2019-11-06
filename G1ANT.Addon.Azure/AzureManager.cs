@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
 namespace G1ANT.Addon.Azure
 {
-    public class AzureManager
+    public class AzureKeyVaultManager
     {
         private string clientId;
         private string clientSecret;
@@ -38,17 +38,16 @@ namespace G1ANT.Addon.Azure
             }
         }
 
-        public async Task<bool> AreCredentialsCorrect(string clientId, string clientSecret, Uri keyVaultUri, int azureTimeout)
+        public async Task ValidateKeyVaultClient(string clientId, string clientSecret, Uri keyVaultUri, int azureTimeout)
         {
             try
             {
                 await GetSecret(clientId, clientSecret, keyVaultUri, "fCuJc6bA9N", azureTimeout).ConfigureAwait(false);
-                return true;
             }
             catch (AggregateException ex)
             {
                 if (ex.InnerException is KeyVaultErrorException exception && exception.Body.Error.Code == "SecretNotFound")
-                    return true;
+                    return;
                 throw ex?.InnerException ?? ex;
             }
         }

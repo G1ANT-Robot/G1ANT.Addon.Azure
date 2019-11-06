@@ -28,13 +28,13 @@ namespace G1ANT.Addon.Azure.Structures
 
         public override Structure Get(string index = null)
         {
-            var azureManager = new AzureManager();
+            var azureKeyVaultManager = new AzureKeyVaultManager();
             if (string.IsNullOrEmpty(index))
             {
                 throw new ArgumentException("Key name can't be empty");
             }
 
-            return new PasswordStructure(azureManager.GetSecret(clientId, clientSecret, keyVaultUri, index, azureTimeout).Result);
+            return new PasswordStructure(azureKeyVaultManager.GetSecret(clientId, clientSecret, keyVaultUri, index, azureTimeout).Result);
         }
 
         public override void Set(Structure value, string index = null)
