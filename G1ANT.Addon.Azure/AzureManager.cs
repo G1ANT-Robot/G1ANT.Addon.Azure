@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using G1ANT.Addon.Azure.Extensions;
 using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.KeyVault.Models;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
 namespace G1ANT.Addon.Azure
@@ -32,30 +33,23 @@ namespace G1ANT.Addon.Azure
             using (var keyVaultClient = new KeyVaultClient(GetToken))
             {
                 var task = keyVaultClient.GetSecretAsync(keyVaultUri + "secrets/" + secretName);
-                await task.TimeoutAfter(azureTimeout + 100000000).ConfigureAwait(false);
+                await task.TimeoutAfter(azureTimeout).ConfigureAwait(false);
                 return task.Result.Value;
             }
         }
 
         public async Task<bool> AreCredentialsCorrectAsync(string clientId, string clientSecret, Uri keyVaultUri, int azureTimeout)
         {
-            this.clientId = clientId;
-            this.clientSecret = clientSecret;
-            var task = GetToken("", "https://vault.azure.net", "");
-
             try
             {
-                await task.TimeoutAfter(azureTimeout).ConfigureAwait(false);
-                return !string.IsNullOrEmpty(task.Result);
+                await GetSecret(clientId, clientSecret, keyVaultUri, "fCuJc6bA9N", azureTimeout).ConfigureAwait(false);
+                return true;
             }
-            catch (Exception ex)
+            catch (AggregateException ex)
             {
-                if (ex.GetType() == typeof(TimeoutException))
-                {
-                    throw new TimeoutException("Connection to Azure timed out. This could happen if you provided wrong ClientId, Secret, Url or there is problem with internet connection.");
-                }
-
-                throw;
+                if (ex.InnerException is KeyVaultErrorException exception && exception.Body.Error.Code == "SecretNotFound")
+                    return true;
+                throw ex?.InnerException ?? ex;
             }
         }
     }
