@@ -11,6 +11,17 @@ namespace G1ANT.Addon.Azure
     {
         private string clientId;
         private string clientSecret;
+        private int azureTimeout;
+        private Uri keyVaultUri;
+
+        public AzureKeyVaultManager(string clientId, string clientSecret, Uri keyVaultUri, int azureTimeout)
+        {
+            this.clientId = clientId;
+            this.clientSecret = clientSecret;
+            this.azureTimeout = azureTimeout;
+            this.keyVaultUri = keyVaultUri;
+            ValidateKeyVaultClient().Wait();
+        }
 
         private async Task<string> GetToken(string authority, string resource, string scope)
         {
@@ -20,16 +31,14 @@ namespace G1ANT.Addon.Azure
 
             if (result.AccessToken == null)
             {
-                throw new InvalidOperationException("Failed to obtain the JWT token");
+                throw new Exception("Failed to obtain the JWT token");
             }
 
             return result.AccessToken;
         }
 
-        public async Task<string> GetSecret(string clientId, string clientSecret, Uri keyVaultUri, string secretName, int azureTimeout)
+        public async Task<string> GetSecret(string secretName)
         {
-            this.clientId = clientId;
-            this.clientSecret = clientSecret;
             using (var keyVaultClient = new KeyVaultClient(GetToken))
             {
                 var task = keyVaultClient.GetSecretAsync(keyVaultUri + "secrets/" + secretName);
@@ -38,11 +47,11 @@ namespace G1ANT.Addon.Azure
             }
         }
 
-        public async Task ValidateKeyVaultClient(string clientId, string clientSecret, Uri keyVaultUri, int azureTimeout)
+        public async Task ValidateKeyVaultClient()
         {
             try
             {
-                await GetSecret(clientId, clientSecret, keyVaultUri, "fCuJc6bA9N", azureTimeout).ConfigureAwait(false);
+                await GetSecret(Guid.NewGuid().ToString()).ConfigureAwait(false);
             }
             catch (AggregateException ex)
             {
