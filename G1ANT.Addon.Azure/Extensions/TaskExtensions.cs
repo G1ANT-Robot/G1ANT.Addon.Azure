@@ -6,40 +6,32 @@ namespace G1ANT.Addon.Azure.Extensions
 {
     public static class TaskExtensions
     {
-        internal struct VoidTypeStruct { } //dummy struct - there is no non-generic version of TaskCompletionSource<TResult>
+        private struct VoidTypeStruct { } //dummy struct - there is no non-generic version of TaskCompletionSource<TResult>
         public static Task TimeoutAfter(this Task task, int millisecondsTimeout)
         {
-            if (task.IsCompleted || (millisecondsTimeout == Timeout.Infinite))
+            if (task.IsCompleted || millisecondsTimeout == Timeout.Infinite)
             {
                 return task;
             }
 
-            TaskCompletionSource<VoidTypeStruct> tcs = new TaskCompletionSource<VoidTypeStruct>();
+            var completionSource = new TaskCompletionSource<VoidTypeStruct>();
 
             if (millisecondsTimeout == 0)
             {
-                tcs.SetException(new TimeoutException());
-                return tcs.Task;
+                completionSource.SetException(new TimeoutException());
+                return completionSource.Task;
             }
 
-            Timer timer = new Timer(state =>
-            {
-                var myTcs = (TaskCompletionSource<VoidTypeStruct>)state;
-                myTcs.TrySetException(new TimeoutException());
-            }, tcs, millisecondsTimeout, Timeout.Infinite);
+            var timeoutTimer = new Timer(state => SetTimerTimeoutException(state), completionSource, millisecondsTimeout, Timeout.Infinite);
 
-            task.ContinueWith((antecedent, state) =>
-            {
-                var tuple = (Tuple<Timer, TaskCompletionSource<VoidTypeStruct>>)state;
-                tuple.Item1.Dispose();
-                MarshalTaskResults(antecedent, tuple.Item2);
-            },
-            Tuple.Create(timer, tcs),
-            CancellationToken.None,
-            TaskContinuationOptions.ExecuteSynchronously,
-            TaskScheduler.Default);
+            task.ContinueWith((antecedent, state) => 
+                FinishTaskExecution(antecedent, state),
+                Tuple.Create(timeoutTimer, completionSource),
+                CancellationToken.None,
+                TaskContinuationOptions.ExecuteSynchronously,
+                TaskScheduler.Default);
 
-            return tcs.Task;
+            return completionSource.Task;
         }
 
         internal static void MarshalTaskResults<TResult>(
@@ -58,6 +50,19 @@ namespace G1ANT.Addon.Azure.Extensions
                     proxy.TrySetResult(castedSource == null ? default(TResult) : castedSource.Result);
                     break;
             }
+        }
+
+        private static void SetTimerTimeoutException(object state)
+        {
+            var completionSource = (TaskCompletionSource<VoidTypeStruct>)state;
+            completionSource.TrySetException(new TimeoutException());
+        }
+
+        private static void FinishTaskExecution(Task antecedent, object state)
+        {
+            var tuple = (Tuple<Timer, TaskCompletionSource<VoidTypeStruct>>)state;
+            tuple.Item1.Dispose();
+            MarshalTaskResults(antecedent, tuple.Item2);
         }
     }
 }
