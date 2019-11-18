@@ -24,7 +24,7 @@ namespace G1ANT.Addon.Azure.Extensions
 
             var timeoutTimer = new Timer(state => SetTimerTimeoutException(state), completionSource, millisecondsTimeout, Timeout.Infinite);
 
-            task.ContinueWith((antecedent, state) => 
+            task.ContinueWith((antecedent, state) =>
                 FinishTaskExecution(antecedent, state),
                 Tuple.Create(timeoutTimer, completionSource),
                 CancellationToken.None,
@@ -34,8 +34,7 @@ namespace G1ANT.Addon.Azure.Extensions
             return completionSource.Task;
         }
 
-        internal static void MarshalTaskResults<TResult>(
-    Task source, TaskCompletionSource<TResult> proxy)
+        private static void MarshalTaskResults<TResult>(Task source, TaskCompletionSource<TResult> proxy)
         {
             switch (source.Status)
             {
