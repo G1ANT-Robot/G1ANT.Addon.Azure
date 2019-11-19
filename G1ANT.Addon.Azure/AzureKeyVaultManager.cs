@@ -20,7 +20,18 @@ namespace G1ANT.Addon.Azure
             this.clientSecret = clientSecret;
             this.azureTimeout = azureTimeout;
             this.keyVaultUri = keyVaultUri;
+
+            if(!DoesUriEndWithSlash())
+            {
+                throw new Exception("Key Vault Url should end with '/'");
+            }
+
             ValidateKeyVaultClient().Wait();
+        }
+
+        private bool DoesUriEndWithSlash()
+        {
+            return keyVaultUri.ToString().EndsWith("/");
         }
 
         private async Task<string> GetToken(string authority, string resource, string scope)
@@ -41,7 +52,7 @@ namespace G1ANT.Addon.Azure
         {
             using (var keyVaultClient = new KeyVaultClient(GetToken))
             {
-                var task = keyVaultClient.GetSecretAsync(keyVaultUri + "secrets/" + secretName);
+                var task = keyVaultClient.GetSecretAsync($"{keyVaultUri}secrets/{secretName}");
                 await task.TimeoutAfter(azureTimeout).ConfigureAwait(false);
                 return task.Result.Value;
             }
