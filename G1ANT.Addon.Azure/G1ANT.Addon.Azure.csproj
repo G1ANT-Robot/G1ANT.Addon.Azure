@@ -37,8 +37,8 @@
     <Reference Include="Azure.Identity, Version=1.0.0.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
       <HintPath>..\packages\Azure.Identity.1.0.0\lib\netstandard2.0\Azure.Identity.dll</HintPath>
     </Reference>
-    <Reference Include="G1ANT.Language, Version=4.105.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\G1ANT.Language.4.105.0\lib\net452\G1ANT.Language.dll</HintPath>
+    <Reference Include="G1ANT.Language, Version=4.106.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\G1ANT.Language.4.106.1\lib\net452\G1ANT.Language.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.KeyVault, Version=3.0.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.KeyVault.3.0.4\lib\net461\Microsoft.Azure.KeyVault.dll</HintPath>
